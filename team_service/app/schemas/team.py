@@ -6,11 +6,12 @@ from typing import Optional
 
 class TeamCreate(BaseModel):
     name: str
-
+    description: str
 
 class TeamOut(BaseModel):
     id: UUID
     name: str
+    description: str
     invite_code: str
     created_at: datetime
 

@@ -9,5 +9,6 @@ class Team(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name = Column(String, unique=True, nullable=False)
+    description = Column(String, nullable=True)
     invite_code = Column(String, unique=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

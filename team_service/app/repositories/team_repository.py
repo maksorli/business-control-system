@@ -13,8 +13,7 @@ class TeamRepository:
 
     async def get_all_teams(self) -> List[Team]:
         result = await self.session.execute(
-            select(Team).where(Team.is_deleted == False)
-        )
+            select(Team) )
         return result.scalars().all()
 
     async def get_team_by_id(self, team_id: UUID) -> Optional[Team]:
@@ -29,8 +28,8 @@ class TeamRepository:
         )
         return result.scalar_one_or_none()
 
-    async def create_team(self, name: str, invite_code: str) -> Team:
-        new_team = Team(name=name, invite_code=invite_code)
+    async def create_team(self, name: str, description:str, invite_code: str) -> Team:
+        new_team = Team(name=name, description=description, invite_code=invite_code)
         self.session.add(new_team)
         await self.session.commit()
         await self.session.refresh(new_team)

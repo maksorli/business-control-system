@@ -38,11 +38,8 @@ async def create_team(
         raise HTTPException(status_code=400, detail="User already in a team")
 
     invite_code = generate_invite_code()
-    new_team = await repo.create_team(data.name, invite_code)
-
-    # Здесь нельзя напрямую изменить current_user.team_id, это DTO.
-    # Нужно послать PATCH-запрос в user_service или использовать event (например, через брокер).
-    # Пока просто возвращаем команду.
+    new_team = await repo.create_team(data.name,data.description, invite_code)
+ 
     return new_team
 
 

@@ -26,6 +26,19 @@ services:
 
   #   networks:
   #     - my_network
+  admin_service:
+    build:
+      context: ./admin_service
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8003:8000"
+    networks:
+      - my_network
+
+
   team_service:
     build:
       context: ./team_service
