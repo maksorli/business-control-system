@@ -19,7 +19,7 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     role = Column(Enum(RoleEnum), default=RoleEnum.employee)
     team_id = Column(UUID(as_uuid=True), ForeignKey("teams.id"), nullable=True)
-
+    invite_code = Column(String, nullable=True)
     is_deleted = Column(Boolean, default=False)
     deleted_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

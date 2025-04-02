@@ -13,7 +13,7 @@ async def register_user(data: UserCreate, repo: UserRepository) -> User:
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    team_id = None
+     
     if data.invite_code:
         team = await repo.get_team_by_invite_code(data.invite_code)
         if not team:
@@ -24,7 +24,7 @@ async def register_user(data: UserCreate, repo: UserRepository) -> User:
         name=data.name,
         email=data.email,
         password_hash=hash_password(data.password),
-        
+        invite_code = data.invite_code,
         role=data.role,
     )
     return await repo.create(user)

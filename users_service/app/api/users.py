@@ -31,7 +31,13 @@ async def login(
     repo: UserRepository = Depends(get_user_repository),
 ):
     user = await user_service.authenticate_user(form_data.username, form_data.password, repo)
-    token = create_access_token({"sub": str(user.id)})
+
+    token = create_access_token({
+        "sub": str(user.id),
+        "role": user.role.value,   
+        "team_id": str(user.team_id) if user.team_id else None  
+    })
+
     return {"access_token": token, "token_type": "bearer"}
 
 @router.delete("/{user_id}")
