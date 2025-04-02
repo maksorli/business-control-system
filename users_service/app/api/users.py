@@ -6,16 +6,17 @@ from app.core.database import get_session
 from app.repositories.user_repository import UserRepository
 from app.services import user_service
 from app.schemas.user import UserCreate, UserUpdate, UserOut
-from app.core.security import create_access_token
-
+from app.core.security import create_access_token, get_current_user
+from typing import List
 router = APIRouter(prefix="/users", tags=["Users"])
 
 def get_user_repository(session: AsyncSession = Depends(get_session)) -> UserRepository:
     return UserRepository(session)
 
-@router.get("")
-async def user_start():
-    return 'Привет привет'
+@router.get("/", response_model=List[UserOut])
+async def get_all_users(repo: UserRepository = Depends(get_user_repository)):
+    users = await repo.get_all_users()
+    return users
 
 @router.post("/register", response_model=UserOut)
 async def register_user(
@@ -49,10 +50,12 @@ async def restore_user(
     await user_service.restore_user(user_id, repo)
     return {"detail": "User restored"}
 
-@router.put("/{user_id}", response_model=UserOut)
-async def update_user(
-    user_id: UUID,
+ 
+
+@router.put("/me", response_model=UserOut)
+async def update_me(
     data: UserUpdate,
+    current_user=Depends(get_current_user),
     repo: UserRepository = Depends(get_user_repository),
 ):
-    return await user_service.update_user(user_id, data, repo)
+    return await user_service.update_user(current_user.id, data, repo)

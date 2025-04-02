@@ -5,6 +5,7 @@ from app.models.team import Team
 from uuid import UUID
 from typing import Optional
 from datetime import datetime
+from typing import List
 
 class UserRepository:
     def __init__(self, session: AsyncSession):
@@ -15,6 +16,13 @@ class UserRepository:
             select(User).where(User.email == email, User.is_deleted == False)
         )
         return result.scalar()
+    
+    async def get_all_users(self) -> List[User]:
+        result = await self.session.execute(
+            select(User).where(User.is_deleted == False)
+        )
+        return result.scalars().all()
+
 
     async def get_by_id(self, user_id: UUID) -> Optional[User]:
         return await self.session.get(User, user_id)
