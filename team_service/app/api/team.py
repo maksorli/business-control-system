@@ -4,7 +4,7 @@ from uuid import UUID
 from typing import List
 
 from app.core.database import get_session
-from app.core.security import get_current_user  # это JWT → DTO
+from app.core.security import get_current_user  
 from app.schemas.current_user import CurrentUser
 from app.repositories.team_repository import TeamRepository
 from app.schemas.team import TeamCreate, TeamOut, JoinTeamRequest
@@ -24,7 +24,11 @@ def generate_invite_code(length: int = 8) -> str:
 
 
 @router.get("/", response_model=List[TeamOut])
-async def get_all_teams(repo: TeamRepository = Depends(get_team_repository)):
+async def get_all_teams(repo: TeamRepository = Depends(get_team_repository),
+                        current_user: CurrentUser = Depends(require_admin_user)):
+    
+    if current_user.team_id:
+        raise HTTPException(status_code=400, detail="User already in a team")
     return await repo.get_all_teams()
 
 
@@ -57,11 +61,14 @@ async def join_team(
     return {"detail": f"User joined team {team.name}", "team_id": str(team.id)}
 
 
-@router.get("/{team_id}", response_model=TeamOut)
+@router.get("/{team_id}", response_model=TeamOut, )
 async def get_team_by_id(
     team_id: UUID,
-    repo: TeamRepository = Depends(get_team_repository)
+    repo: TeamRepository = Depends(get_team_repository),
+    current_user: CurrentUser = Depends(require_admin_user)
 ):
+    if current_user.team_id:
+        raise HTTPException(status_code=400, detail="User already in a team")
     team = await repo.get_team_by_id(team_id)
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
