@@ -37,6 +37,19 @@ services:
       - "8003:8000"
     networks:
       - my_network
+  task_service:
+    build:
+      context: ./task_service
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8005:8000"
+    networks:
+      - my_network
+
+
   org_service:
     build:
       context: ./org_service
