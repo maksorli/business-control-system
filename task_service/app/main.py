@@ -5,11 +5,12 @@ from app.core.init_db import init_db
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.api import tasks, comments
-
+from app.kafka.topic_init import create_kafka_topics
  
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await create_kafka_topics()
     await init_db()
     yield
 

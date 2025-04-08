@@ -3,7 +3,8 @@ from sqlalchemy.future import select
 from uuid import UUID
 from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate
-
+from app.kafka.kafka_producer import publish_event
+import asyncio
 
 class TaskRepository:
     def __init__(self, session: AsyncSession):
@@ -14,6 +15,16 @@ class TaskRepository:
         self.session.add(task)
         await self.session.commit()
         await self.session.refresh(task)
+        payload = {
+            "title": task.title,
+            "start_time": task.due_date.isoformat(),
+            "end_time": task.due_date.isoformat(),
+            "type": "task",
+            "related_id": str(task.id),
+            "user_id": str(task.assignee_id)
+        }
+
+        asyncio.create_task(publish_event("task.created", payload))
         return task
 
     async def get_by_id(self, task_id: UUID) -> Task | None:
