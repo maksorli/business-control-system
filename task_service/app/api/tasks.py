@@ -11,7 +11,7 @@ from app.schemas.task import TaskCreate, TaskUpdate, TaskRead
 from app.schemas.current_user import CurrentUser
 from app.repositories.task_repository import TaskRepository
 
-router = APIRouter(prefix="/tasks", tags=["tasks"])
+router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 @router.post("/", response_model=TaskRead, status_code=status.HTTP_201_CREATED)

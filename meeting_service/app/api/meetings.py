@@ -7,7 +7,7 @@ from app.repositories.meeting_repository import MeetingRepository
 from app.kafka.kafka_producer import send_meeting_created_event
 from app.utils.validate_calendar import validate_participant_availability
 
-router = APIRouter(prefix="/meetings", tags=["meetings"])
+router = APIRouter(prefix="/meetings", tags=["Meetings"])
 
 
 @router.post("/", response_model=MeetingRead, status_code=status.HTTP_201_CREATED)

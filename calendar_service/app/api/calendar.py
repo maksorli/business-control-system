@@ -6,7 +6,7 @@ from app.schemas.calendar_event import CalendarEventRead
 from app.schemas.calendar_validate import CalendarValidateRequest
 from app.repositories.calendar_repository import CalendarRepository
 
-router = APIRouter(prefix="/calendar", tags=["calendar"])
+router = APIRouter(prefix="/calendar", tags=["Calendar"])
 
 @router.get("/day/{day}", response_model=list[CalendarEventRead])
 async def get_day(day: date, session: AsyncSession = Depends(get_session)):

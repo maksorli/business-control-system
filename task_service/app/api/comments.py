@@ -10,7 +10,7 @@ from app.schemas.comment import CommentCreate, CommentRead
 from app.repositories.comment_repository import CommentRepository
 from app.repositories.task_repository import TaskRepository
 
-router = APIRouter(prefix="/comments", tags=["comments"])
+router = APIRouter(prefix="/comments", tags=["Tasks"])
 
 
 @router.post("/", response_model=CommentRead, status_code=status.HTTP_201_CREATED)

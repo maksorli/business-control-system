@@ -9,7 +9,7 @@ from app.core.security import get_current_user
 from app.schemas.current_user import CurrentUser
 from app.core.permissions import require_admin_user
 
-router = APIRouter(prefix="/departments", tags=["departments"])
+router = APIRouter(prefix="/departments", tags=["Org"])
 
 
 @router.post("/", response_model=DepartmentRead, status_code=status.HTTP_201_CREATED)
